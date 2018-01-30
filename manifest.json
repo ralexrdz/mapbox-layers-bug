@@ -1,0 +1,7 @@
+{
+  "name": "mapa-prueba",
+  "short_name": "mapa-prueba",
+  "description": "Muestra de uso de componente MapboxGL para Polymer",
+  "start_url": "/",
+  "display": "standalone"
+}

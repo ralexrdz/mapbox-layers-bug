@@ -1,0 +1,173 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/mapbox-gl/mapbox-gl.html">
+<link rel="import" href="../../bower_components/mapbox-gl/mapbox-layer.html">
+<link rel="import" href="../../bower_components/mapbox-gl/geojson-source.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="mapa-prueba-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      #map {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+    <paper-button on-tap="_showLayers1" raised>Show Layers 1</paper-button>
+    <paper-button on-tap="_showLayers2" raised>Show Layers 2</paper-button>
+    <mapbox-gl id="map"
+      interactive
+      map="{{map}}"
+      map-style-url="mapbox://styles/mapbox/dark-v9"
+      script-src="https://api.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.js"
+      access-token="pk.eyJ1IjoiZXRlcm5hMiIsImEiOiJjaXppZjRoaTIwMmYxMndsNHJ4dzR1eWJsIn0.MvJ5fsV47RHlSAt2fBEKLg"
+      zoom="8"
+      pitch="45"
+      bearing="0"
+      latitude="19.4"
+      longitude="-99.1"
+      ></mapbox-gl>
+
+      <template is="dom-repeat" items="[[layers]]">
+        <mapbox-layer
+          map="[[map]]"
+          layer-id="[[item.id]]"
+          rendering-type="[[item.type]]"
+          source="[[item.source]]"
+          color="[[item.color]]"
+          opacity="0.7"
+        >
+        </mapbox-layer>
+        <geojson-source
+          map="[[map]]"
+          source-id="[[item.source]]"
+          source-data="[[item.data]]"
+        >
+        </geojson-source>
+      </template>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class MapaPruebaApp extends Polymer.Element {
+      static get is() {
+        return 'mapa-prueba-app';
+      }
+      static get properties() {
+        return {
+          layers: {
+            type: Array,
+            value: []
+          },
+          layers1: {
+            type: Array,
+            value: [
+            {
+              id: "layer3",
+              source: "source3",
+              type: "circle",
+              color: "#afa",
+              data: {
+                type: "FeatureCollection",
+                features: [
+                  {
+                    type: "Feature",
+                    geometry: {
+                      type: "Point",
+                      coordinates: [-99.1, 19.1]
+                    },
+                    properties: {
+                      title: "Mapbox SF",
+                      icon: "harbor"
+                    }
+                  }
+                ]
+              }
+            }
+            ]
+          },
+          layers2: {
+            type: Array,
+            value: [
+              {
+              id: "layer1",
+              type: "circle",
+              color: "#faa",
+              source: "source1",
+              data: {
+                type: "FeatureCollection",
+                features: [
+                  {
+                    type: "Feature",
+                    geometry: {
+                      type: "Point",
+                      coordinates: [-99.2, 19.2]
+                    },
+                    properties: {
+                      title: "Mapbox DC",
+                      icon: "monument"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              id: "layer2",
+              type: "circle",
+              color: "#ffa",
+              source: "source2",
+              data: {
+                type: "FeatureCollection",
+                features: [
+                  {
+                    type: "Feature",
+                    geometry: {
+                      type: "Point",
+                      coordinates: [-99.3, 19.3]
+                    },
+                    properties: {
+                      title: "Mapbox SF",
+                      icon: "harbor"
+                    }
+                  }
+                ]
+              }
+            }
+            ]
+          }
+        }
+      }
+
+      _showLayers1 () {
+        this._clearLayers()
+        this.set('layers', this.layers1)
+        setTimeout(() => {
+          if (this.map) this.map.fire('load')
+        }, 500)
+      }
+
+      _showLayers2 () {
+        this._clearLayers()
+        this.set('layers', this.layers2)
+        setTimeout(() => {
+          if (this.map) this.map.fire('load')
+        }, 500)
+      }
+
+      _clearLayers () {
+        let layersToRemove = Object.keys(this.map.style._layers).filter(l => l.indexOf('layer') > -1)
+        layersToRemove.forEach(l => {
+          this.map.removeLayer(l)
+        })
+      }
+    }
+
+    window.customElements.define(MapaPruebaApp.is, MapaPruebaApp);
+  </script>
+</dom-module>
