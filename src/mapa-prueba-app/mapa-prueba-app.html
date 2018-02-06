@@ -22,7 +22,6 @@
       interactive
       map="{{map}}"
       map-style-url="mapbox://styles/mapbox/dark-v9"
-      script-src="https://api.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.js"
       access-token="pk.eyJ1IjoiZXRlcm5hMiIsImEiOiJjaXppZjRoaTIwMmYxMndsNHJ4dzR1eWJsIn0.MvJ5fsV47RHlSAt2fBEKLg"
       zoom="8"
       pitch="45"
@@ -39,7 +38,8 @@
           source="[[item.source]]"
           color="[[item.color]]"
           opacity="0.7"
-        >
+          events-to-watch="click"
+          on-mapbox-layer-click="_layerClicked">
         </mapbox-layer>
         <geojson-source
           map="[[map]]"
@@ -210,6 +210,10 @@
         layersToRemove.forEach(l => {
           this.map.removeLayer(l)
         })
+      }
+
+      _layerClicked (e) {
+        console.log('_layerClicked')
       }
     }
 
